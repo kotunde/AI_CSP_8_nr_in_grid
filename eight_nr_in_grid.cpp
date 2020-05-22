@@ -53,7 +53,6 @@ int main(int argc, char * argv[])
 
     int method = atoi(argv[1]);
 	
-    ///fajlmegnyitas es ellenorzes
     fin = fopen("input.txt","r");
     if(!fin)
     {
@@ -64,7 +63,6 @@ int main(int argc, char * argv[])
     fscanf(fin,"%i %i",&cs,&e);
     printf("%i %i\n",cs,e);
 
-    ///el tomb deklaralas es ellenorzes
     el_tomb = (el*)calloc(e+1,sizeof(el));
     if(!el_tomb)
     {
@@ -72,7 +70,6 @@ int main(int argc, char * argv[])
         return -1;
     }
 
-    ///ertekek beolvasasa az el tombbe
     for (i=1; i<e+1; ++i)
     {
         fscanf(fin,"%i %i",&el_tomb[i].u,&el_tomb[i].v);
@@ -81,7 +78,6 @@ int main(int argc, char * argv[])
     printf("\n");
 
 
-    ///szomszedsagi lista helyfoglalas
     node* szomsz_list=(node*)calloc(cs+1,sizeof(node));
     if (!szomsz_list)
     {
@@ -89,14 +85,12 @@ int main(int argc, char * argv[])
         return -1;
     }
 
-    ///A grafban a fokszamok meghatarozasa minden csucspontnak
     for (i=1; i<e+1; ++i)
     {
         ++szomsz_list[el_tomb[i].u].fokszam;
         ++szomsz_list[el_tomb[i].v].fokszam;
     }
 
-    ///A grafban helyfoglalas az elek tombjenek
     for (int i=1; i<cs+1; ++i)
     {
         szomsz_list[i].szomszedok=(int*)calloc(szomsz_list[i].fokszam+1,sizeof(int));
@@ -105,11 +99,9 @@ int main(int argc, char * argv[])
             printf("Kiszomszedok helyfoglalasi hiba az %i-dik csucsnak!",i);
             return -1;
         }
-        //az ertekek meg nicsenek feltoltve, -1 -el inicializalunk
         szomsz_list[i].ertek = -1;
     }
 
-    ///A grafban a szomszedok tombok feltoltese
     for (i=1; i<cs+1; ++i)
     {
         int ind1=0;
@@ -128,7 +120,7 @@ int main(int argc, char * argv[])
             }
         }
     }
-    /// szomszedok tombok rendezese
+	
     for (i=1; i<cs+1;++i)
     {
         qsort(szomsz_list[i].szomszedok,szomsz_list[i].fokszam+1,sizeof(int),mycmp);
@@ -144,7 +136,7 @@ int main(int argc, char * argv[])
         {
             printf("%i ",szomsz_list[i].szomszedok[j]);
         }
-        //printf("\n");
+        
         printf("\nertek:  %i\n",szomsz_list[i].ertek);
         printf("\n");
     }
@@ -153,7 +145,6 @@ int main(int argc, char * argv[])
     // Backtracking
     backtracking_felosztas(szomsz_list,cs,method);
     ///*********************************************************************************************************
-    /// lefoglalt memoria felszabaditas
     for(i = 0; i < cs+1; ++i)
     {
         free(szomsz_list[i].szomszedok);
@@ -170,7 +161,6 @@ int main(int argc, char * argv[])
 
 int backtracking_felosztas(node* szomsz_list,int cs, int modszer)
 {
-    //az elejen egy elem sincs felhasznalva
     int* felhasznalva = (int*)calloc(cs+1,sizeof(int));
     mrv_arr = (int*)calloc(cs+1,sizeof(int));
 
@@ -258,7 +248,6 @@ int rekurziv_backtracking_felosztas(node* szomsz_list, int cs, int* felhasznalva
             if(kenyszer_teszt(szomsz_list, cs, felhasznalva, pozicio, szam))
             {
                 szomsz_list[pozicio].ertek = szam;
-                //ertekadasok_szama++;
                 felhasznalva[szam] = 1;
 
                 int eredmeny = rekurziv_backtracking_felosztas(szomsz_list,cs,felhasznalva,pozicio+1);
@@ -389,7 +378,7 @@ int rekurziv_backtracking_ac3_felosztas(node* szomsz_list,int cs, int ures_valto
                 domeniumbol_kizar_felhasznaltat(ac3_available_copy,cs,pozicio,szam,muvelet_inverz);
 
                 int arcs_are_consistent = ac3(szomsz_list,cs,pozicio,ac3_available_copy);
-                print_mtrx(ac3_available_copy,cs+1);
+                //print_mtrx(ac3_available_copy,cs+1);
 
                 if (arcs_are_consistent)
                 {
